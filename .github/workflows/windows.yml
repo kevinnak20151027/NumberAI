@@ -27,7 +27,7 @@ jobs:
 
       - name: Build
         run: |
-          pyinstaller --onedir --name NumberAI --icon=icon.png --add-data "model\mnist.model;model" file\main.py
+          pyinstaller --onedir --name NumberAI --icon=icon.ico --add-data "model\mnist.model;model" file\main.py
 
       - name: Package
         run: |
