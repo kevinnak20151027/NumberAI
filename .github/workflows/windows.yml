@@ -1,0 +1,40 @@
+name: Build Windows
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install -r requirements.txt
+
+      - name: Build
+        run: |
+          pyinstaller --onedir --name NumberAI --icon=icon.ico --add-data "model\mnist.model;model" file\main.py
+
+      - name: Package
+        run: |
+          Compress-Archive -Path dist\NumberAI -DestinationPath NumberAI-Windows.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NumberAI-Windows
+          path: NumberAI-Windows.zip
